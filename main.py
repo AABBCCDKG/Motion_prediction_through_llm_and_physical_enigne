@@ -8,49 +8,30 @@ from PIL import Image
 def get_image_paths(folder_path):
         if not os.path.exists(folder_path):
             raise ValueError(f"The folder path {folder_path} does not exist.")
-        
-        # 获取文件夹中的所有文件名
         all_files = os.listdir(folder_path)
-        
-        # 过滤出符合条件的文件名
         image_files = [f for f in all_files if f.endswith('.jpg') or f.endswith('.png') or f.endswith('.jpeg')]
 
-        # 按文件名排序
         image_files.sort()
 
-        # 构建完整路径
         image_paths = [os.path.join(folder_path, f) for f in image_files]
         
         return image_paths
-    
 
 def fit_quadratic_function(t_values, y_values):
-    """
-    对给定的 t 值和 y 值拟合二次函数 y = at^2 + bt + c
-    
-    参数:
-    t_values (list or array): t 的值列表
-    y_values (list or array): y 的值列表
-    
-    返回:
-    tuple: (a, b, c, r_squared)
-    """
     def quadratic_function(t, a, b, c):
         return a * t**2 + b * t + c
     
-    # 将输入转换为 numpy 数组
     t = np.array(t_values)
     y = np.array(y_values)
     
-    # 使用 curve_fit 找到最佳拟合参数
     popt, _ = curve_fit(quadratic_function, t, y)
-    # 解包参数
+        
     a, b, c = popt
     
-    # 计算 R-squared 值
     """
-    对于变化大的数据，R-squared 值往往会更高，因为模型能解释更多的数据变异性。
-    相比之下，变化小的数据可能会得到较低的 R-squared 值，即使实际拟合可能很好。
+    For data with high variability, the R-squared value tends to be higher 
+    because the model can explain more of the data's variability. In contrast, 
+    data with low variability may result in a lower R-squared value, even if the actual fit is quite good.
     """
     residuals = y - quadratic_function(t, *popt)
     ss_res = np.sum(residuals**2)
@@ -92,7 +73,6 @@ def get_image_dimensions(image_path):
         print(f"An error occurred: {e}")
         return None
 
-# Example usage:
 image_path = '/Users/dong/Desktop/video/dataset/1/1/input/frame_00000.jpg'
 dimensions = get_image_dimensions(image_path)
 
@@ -107,8 +87,6 @@ for i in range(len(desired_output)):
         list1 = time_sequence[i][j]
         list2 = desired_output[i][j]
         a, b, c, r_squared, fitted_func, derivate_func = fit_quadratic_function(list1, list2)
-        #print(desired_output[i][0][0])
-        #print(desired_output[i][1][0])
         if j == 0:
             x_velocity = b
             x_r_squared = r_squared
@@ -118,15 +96,6 @@ for i in range(len(desired_output)):
                 simulator.add_ball(position = (desired_output[i][0][0],desired_output[i][1][0]), radius = radius_list[i], mass = 20, velocity = (x_velocity, b), acceleration=(x_acceleration, a * 2))
             else:
                 simulator.add_ball(position = (desired_output[i][0][0],desired_output[i][1][0]), radius = radius_list[i], mass = 20, velocity = (0, 0), acceleration=(0,0))
-        #print(desired_output[i][0][0])
-        #print(f"最佳拟合参数：")
-        #print(f"a = {a:.8f}")
-        #print(f"b = {b:.8f}")
-        #print(f"c = {c:.8f}")
-        #print(f"R-squared: {r_squared:.8f}")
-        #print("\使用拟合函数计算值：")
         for k in range(len(list1)):
             y_fitted = fitted_func(list1[k])
-            #print(f"t = {list1[k]}, y_fitted = {y_fitted:.8f}, y_original = {list2[k]}")
-
 simulator.run()
