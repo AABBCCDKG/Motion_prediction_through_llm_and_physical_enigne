@@ -8,7 +8,7 @@ Predicting 2D video sequences is a fundamental task for understanding real-world
 1. In the `main.py` file, locate the following line and fill in the number to change the input:
     ```python
     #folder_path = '/Users/dong/Desktop/video/dataset/{1-10}/{1-2}/input/'
-{1-10}: 10 different couple 
+{1-10}: 10 video groups, each containing videos with interaction and without interaction 
 
 {1-2}: 1-with interaction, 2-without interaction
 
