@@ -53,11 +53,8 @@ class DetectObject:
                     return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2 + (p1[2] - p2[2])**2)
             
                 return sum(euclidean_distance(p1, p2) for p1, p2 in zip(based_list, list2))
-            
-            # 生成list2的所有排列
-            all_permutations = permutations(list2)
 
-            # 找到使整体距离最小的排列
+            all_permutations = permutations(list2)
             min_distance = float('inf')
             best_permutation = None
 
@@ -69,7 +66,6 @@ class DetectObject:
 
             return list(best_permutation)
             
-        # 找到所有最内层列表中的最大长度
         max_length = 0
         max_index = -1
         for i, inner_list in enumerate(nested_lists):
@@ -78,33 +74,23 @@ class DetectObject:
                 max_index = i
         max_index = max_index
         max_length = max(len(inner_list) for inner_list in nested_lists)
-        # 对每个最内层列表进行补位
         padded_lists = []
         for inner_list in nested_lists:
-            # 计算需要补充的数量
             padding_needed = max_length - len(inner_list)
-            # 生成补充列表
             padding = [pad_value] * padding_needed
-            # 合并原列表和补充列表
             padded_inner_list = inner_list + padding
-            # 将补充后的列表加入结果列表
             padded_lists.append(padded_inner_list)
         
         results = [None] * len(padded_lists)
         results[max_index] = padded_lists[max_index]
-        #print("max")
-        #print(padded_lists[max_index])
         for i in range(0, len(padded_lists)):
             if i != max_index:
                 print(f"Reordering list at index {i} / {len(padded_lists) -1}")
-            
-                #print("before reordering")
                 print(padded_lists[i])
                 if i <= max_index:
                     padded_lists[i] = reorder(padded_lists[max_index], padded_lists[i])
                 else:
                     padded_lists[i] = reorder(padded_lists[i-1], padded_lists[i])
-                #print(f"Updated list at index {i}: {padded_lists[i]}")
             else:
                 i += 1
                  
@@ -116,7 +102,6 @@ class DetectObject:
                 if padded_lists[i][j] == (0,0,0):
                     padded_index = j
                     padded_number = padded_number + 1
-        # 识别完整：(0,0,0)占少部分
         if padded_number < 0.75 * len(padded_lists):
             for i in range(0, len(padded_lists)):
                 for j in range(0, len(padded_lists[i])):
@@ -127,7 +112,7 @@ class DetectObject:
                             padded_lists[i][j] = padded_lists[i - 1][j]
                         else:
                             padded_lists[i][j] = average_tuples(padded_lists[i - 1][j], padded_lists[i + 1][j])
-        else: # 识别不完整：(0,0,0)占大部分
+        else: 
             sum_of_valid = (0,0,0)
             number = 0
             for i in range(0, len(padded_lists)):
@@ -230,31 +215,3 @@ class DetectObject:
     def detect_rectangles(self, image_path):
         pass
     
-#展示识别结果
-if __name__ == "__main__":
-    def get_image_paths(folder_path):
-        if not os.path.exists(folder_path):
-            raise ValueError(f"The folder path {folder_path} does not exist.")
-        
-        # 获取文件夹中的所有文件名
-        all_files = os.listdir(folder_path)
-        
-        # 过滤出符合条件的文件名
-        image_files = [f for f in all_files if f.endswith('.jpg') or f.endswith('.png') or f.endswith('.jpeg')]
-
-        # 按文件名排序
-        image_files.sort()
-
-        # 构建完整路径
-        image_paths = [os.path.join(folder_path, f) for f in image_files]
-        
-        return image_paths
-    
-    folder_path = '/Users/dong/Desktop/video/withballframes'
-    image_paths = get_image_paths(folder_path)
-    
-
-    detector = DetectObject()
-    positions_of_circles = detector.detect(image_paths, ['circle'])
-    df = pd.DataFrame(positions_of_circles['circle'])
-    print(df)
