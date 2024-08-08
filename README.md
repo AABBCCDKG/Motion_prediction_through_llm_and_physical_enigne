@@ -1,4 +1,4 @@
-# Motion_prediction_through_llm_and_physical_enigne
+# Video_prediction_through_physical_laws
 
 ## Project Overview
 
