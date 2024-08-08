@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Predicting 2D video sequences is a fundamental task for understanding real-world dynamics. However, existing models often require large datasets for training and struggle to predict complex motions, particularly when data is scarce or expensive. We introduce a framework for predicting object motion based on physical laws. Our approach begins by identifying the position information of objects and fitting position functions to determine the necessary dynamic parameters. These parameters are then used in a physics engine to simulate the motion of the objects. Subsequently, neural networks are employed for texture mapping, resulting in the final predicted image. This method eliminates the need for extensive datasets and effectively handles situations involving sudden changes, such as collisions.
+Predicting 2D video sequences is a fundamental task for understanding real-world dynamics. However, existing models often require large datasets for training and struggle to predict complex motions, particularly when data is scarce or expensive. We introduce a framework for predicting object motion based on physical laws. Our approach begins by identifying the position information of objects and fitting position functions to determine the necessary dynamic parameters. These parameters are then used in a physics engine to simulate the motion of the objects. Subsequently, neural networks are employed for texture mapping, resulting in the final predicted image. By leveraging known physical laws, our framework reduces the reliance on large datasets and enhances the model’s ability to predict complex and abrupt motions.
 
 ## How to use
 1. In the `main.py` file, locate the following line and fill in the number to change the input:
