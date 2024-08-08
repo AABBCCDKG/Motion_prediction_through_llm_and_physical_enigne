@@ -12,7 +12,7 @@ class PhysicsEngine:
         self.clock = pygame.time.Clock()
         self.gravity = gravity
         self.space = self.create_space(self.gravity)
-        self.balls = []  # 存储所有球的 body 以便手动更新速度
+        self.balls = [] 
 
     def create_space(self, gravity):
         """
@@ -31,10 +31,10 @@ class PhysicsEngine:
         body.position = position
         body.velocity = velocity
         shape = pymunk.Circle(body, radius)
-        shape.elasticity = 0.95  # 设置弹性系数
+        shape.elasticity = 0.95  
         shape.friction = 0.7
         self.space.add(body, shape)
-        self.balls.append([body, acceleration, velocity, velocity])  # 存储 body 和初始加速度，初速度，上一次速度
+        self.balls.append([body, acceleration, velocity, velocity]) 
         
     def generate_spline(self, points, num_points=100):
         """
@@ -75,22 +75,14 @@ class PhysicsEngine:
     def update(self, dt):
         for ball_data in self.balls:
             body, acceleration, initial_velocity, previous_velocity = ball_data
-            
-            #print(f"Previous velocity: {previous_velocity}")
-            
-            # 如果速度发生变化，重新计算加速度
             velocity_change = (body.velocity.x - previous_velocity[0], body.velocity.y - previous_velocity[0])
             if velocity_change[0] != acceleration[0] or velocity_change[1] != acceleration[1]:
                 new_acceleration = self.calculate_acceleration(body.velocity, acceleration)
                 ball_data[1] = new_acceleration
-
-            #print(f"Current acceleration: {acceleration}")
                 
             body.velocity = (body.velocity.x + acceleration[0] * dt, 
                              body.velocity.y + acceleration[1] * dt)
-            ball_data[3] = body.velocity # 更新previous速度
-            
-            #print(f"Current velocity: {body.velocity}")
+            ball_data[3] = body.velocity
                 
         self.space.step(dt)
     
@@ -107,23 +99,9 @@ class PhysicsEngine:
                     pygame.quit()
                     sys.exit()
 
-            self.screen.fill((255, 255, 255))  # 填充背景颜色
-            self.update(1 / 4)  # 更新物理空间
-            self.draw_space(self.screen)  # 绘制物理空间
+            self.screen.fill((255, 255, 255)) 
+            self.update(1 / 4) 
+            self.draw_space(self.screen)  
 
             pygame.display.flip()
-            self.clock.tick(60)  # 控制帧率
-            
-"""
-simulator = PhysicsEngine(width of image, length of image, gravity = (x, y))
-simulator.add_ball(position = (x, y), radius = r, mass = m, velocity = (x, y), acceleration = (a1, a2))
-simulator.add_curved_floor(points = [(x1, y1), (x2, y2), ...], thickness = t, frictions = f)
-simulator.add_polygon(position = (x, y), vertices = [(x1, y1), (x2, y2), ...], mass = m, velocity = (x, y))
-simulator.run()
-"""  
-
-# 示例用法
-# simulator = PhysicsEngine(1280, 720, (0, 0))
-# simulator.add_ball(position=(195, 447), radius=35, mass=20, velocity=(9.96742900, -2.64440589), acceleration=(-0.01275740 * 2, 0.00326223 * 2))
-# simulator.add_ball(position=(1073.0, 215), radius=35, mass=200, velocity=(0, 0), acceleration=(0, 0))
-# simulator.run()
+            self.clock.tick(60)  
